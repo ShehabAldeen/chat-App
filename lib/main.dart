@@ -17,6 +17,7 @@ class MyApp extends StatelessWidget {
         appBarTheme: AppBarTheme(
           elevation: 0,
           backgroundColor: Colors.transparent,
+          centerTitle: true,
         ),
       ),
       routes: {
