@@ -1,15 +1,26 @@
 import 'package:chat_app/utils.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
 import 'custom_files/custom_text.dart';
 
-class Registerscreen extends StatelessWidget {
+class Registerscreen extends StatefulWidget {
   static final routeName = 'register screen';
-  String? firstName;
-  String? lastName;
-  String? userName;
-  String? email;
-  String? password;
+
+  @override
+  State<Registerscreen> createState() => _RegisterscreenState();
+}
+
+class _RegisterscreenState extends State<Registerscreen> {
+  String firstName='';
+
+  String lastName='';
+
+  String userName='';
+
+  String email='';
+
+  String password='';
+
   var formKey = GlobalKey<FormState>();
 
   @override
@@ -39,6 +50,7 @@ class Registerscreen extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  SizedBox(height: MediaQuery.of(context).size.height*0.15),
                   TextFormField(
                     decoration: InputDecoration(
                       labelText: 'First Name',
@@ -72,7 +84,7 @@ class Registerscreen extends StatelessWidget {
                       labelText: 'User Name',
                     ),
                     onChanged: (text) {
-                      firstName = text;
+                      userName = text;
                     },
                     validator: (text) {
                       if (text == null || text.trim().isEmpty) {
@@ -92,10 +104,10 @@ class Registerscreen extends StatelessWidget {
                       if (text == null || text.trim().isEmpty) {
                         return 'Please enter email';
                       }
-                      if (Utils.isValidEmail(email ?? '')) {
-                        return null;
+                      if (!isValidEmail(email )) {
+                        return 'invalid email';
                       }
-                      return 'invalid email';
+                      return null;
                     },
                   ),
                   TextFormField(
@@ -103,7 +115,7 @@ class Registerscreen extends StatelessWidget {
                       labelText: 'Password',
                     ),
                     onChanged: (text) {
-                      email = text;
+                      password = text;
                     },
                     validator: (text) {
                       if (text == null || text.trim().isEmpty) {
@@ -144,5 +156,19 @@ class Registerscreen extends StatelessWidget {
     );
   }
 
-  void createAccountWithFirebaseAuth() {}
+  void createAccountWithFirebaseAuth()async {
+    try {
+      showLoading(context);
+      var result = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+          email: email,
+          password: password);
+      hideLoading(context);
+      if(result.user !=null){
+        showMessage('User is added successfully', context);
+      }
+    }catch(e){
+      hideLoading(context);
+      showMessage(e.toString(), context);
+    }
+  }
 }
