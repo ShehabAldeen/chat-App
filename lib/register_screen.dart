@@ -1,6 +1,7 @@
 import 'package:chat_app/utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+
 import 'custom_files/custom_text.dart';
 
 class Registerscreen extends StatefulWidget {
@@ -11,15 +12,15 @@ class Registerscreen extends StatefulWidget {
 }
 
 class _RegisterscreenState extends State<Registerscreen> {
-  String firstName='';
+  String firstName = '';
 
-  String lastName='';
+  String lastName = '';
 
-  String userName='';
+  String userName = '';
 
-  String email='';
+  String email = '';
 
-  String password='';
+  String password = '';
 
   var formKey = GlobalKey<FormState>();
 
@@ -50,7 +51,7 @@ class _RegisterscreenState extends State<Registerscreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  SizedBox(height: MediaQuery.of(context).size.height*0.15),
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.15),
                   TextFormField(
                     decoration: InputDecoration(
                       labelText: 'First Name',
@@ -104,7 +105,7 @@ class _RegisterscreenState extends State<Registerscreen> {
                       if (text == null || text.trim().isEmpty) {
                         return 'Please enter email';
                       }
-                      if (!isValidEmail(email )) {
+                      if (!isValidEmail(email)) {
                         return 'invalid email';
                       }
                       return null;
@@ -156,17 +157,16 @@ class _RegisterscreenState extends State<Registerscreen> {
     );
   }
 
-  void createAccountWithFirebaseAuth()async {
+  void createAccountWithFirebaseAuth() async {
     try {
       showLoading(context);
-      var result = await FirebaseAuth.instance.createUserWithEmailAndPassword(
-          email: email,
-          password: password);
+      var result = await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(email: email, password: password);
       hideLoading(context);
-      if(result.user !=null){
+      if (result.user != null) {
         showMessage('User is added successfully', context);
       }
-    }catch(e){
+    } catch (e) {
       hideLoading(context);
       showMessage(e.toString(), context);
     }
