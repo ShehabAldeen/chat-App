@@ -1,8 +1,11 @@
+import 'package:chat_app/firestore_utils.dart';
+import 'package:chat_app/home_screen.dart';
+import 'package:chat_app/provider/auth_provider.dart';
 import 'package:chat_app/register_screen.dart';
 import 'package:chat_app/utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'custom_files/custom_text.dart';
 
@@ -19,9 +22,11 @@ class _LoginScreenState extends State<LoginScreen> {
   String password = '';
 
   var formKey = GlobalKey<FormState>();
+  late AuthProvider provider;
 
   @override
   Widget build(BuildContext context) {
+    provider = Provider.of<AuthProvider>(context);
     return Container(
       decoration: BoxDecoration(
           color: Colors.white,
@@ -132,7 +137,11 @@ class _LoginScreenState extends State<LoginScreen> {
           .signInWithEmailAndPassword(email: email, password: password);
       hideLoading(context);
       if (result.user != null) {
-        showMessage('login was successfully', context);
+        var firestoreUser = await getUserById(result.user!.uid);
+        if (firestoreUser != null) {
+          provider.saveUserDataInProvider(firestoreUser);
+          Navigator.pushReplacementNamed(context, HomeScreen.routeName);
+        }
       }
     } catch (e) {
       hideLoading(context);

@@ -1,10 +1,13 @@
 import 'package:chat_app/firestore_utils.dart';
+import 'package:chat_app/provider/auth_provider.dart';
 import 'package:chat_app/users.dart';
 import 'package:chat_app/utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'custom_files/custom_text.dart';
+import 'home_screen.dart';
 
 class Registerscreen extends StatefulWidget {
   static final routeName = 'register screen';
@@ -25,9 +28,11 @@ class _RegisterscreenState extends State<Registerscreen> {
   String password = '';
 
   var formKey = GlobalKey<FormState>();
+  late AuthProvider provider;
 
   @override
   Widget build(BuildContext context) {
+    provider = Provider.of<AuthProvider>(context);
     return Container(
       decoration: BoxDecoration(
           color: Colors.white,
@@ -164,24 +169,20 @@ class _RegisterscreenState extends State<Registerscreen> {
       showLoading(context);
       var result = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(email: email, password: password);
-      addUserToFirestore(UserData(
+      var user = UserData(
           userName: userName,
           password: password,
           email: email,
           id: result.user!.uid,
           firstName: firstName,
-          lastName: lastName));
+          lastName: lastName);
       hideLoading(context);
       if (result.user != null) {
-        addUserToFirestore(UserData(
-                userName: userName,
-                password: password,
-                email: email,
-                id: result.user!.uid,
-                firstName: firstName,
-                lastName: lastName))
+        addUserToFirestore(user)
             .then((value) => {
+                  provider.saveUserDataInProvider(user),
                   showMessage('User is added successfully', context),
+                  Navigator.pushReplacementNamed(context, HomeScreen.routeName),
                 })
             .onError((error, stackTrace) => {
                   showMessage(error.toString(), context),
