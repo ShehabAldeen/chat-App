@@ -1,3 +1,4 @@
+import 'package:chat_app/add_room_screen.dart';
 import 'package:chat_app/login_screen.dart';
 import 'package:chat_app/provider/auth_provider.dart';
 import 'package:chat_app/register_screen.dart';
@@ -19,6 +20,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var provider = Provider.of<AuthProvider>(context);
     return MaterialApp(
       theme: ThemeData(
         primarySwatch: Colors.blue,
@@ -33,8 +35,10 @@ class MyApp extends StatelessWidget {
         Registerscreen.routeName: (context) => Registerscreen(),
         LoginScreen.routeName: (context) => LoginScreen(),
         HomeScreen.routeName: (context) => HomeScreen(),
+        AddRoomScreen.routeName: (context) => AddRoomScreen(),
       },
-      initialRoute: LoginScreen.routeName,
+      initialRoute:
+          provider.isLoggedIn() ? HomeScreen.routeName : LoginScreen.routeName,
     );
   }
 }
