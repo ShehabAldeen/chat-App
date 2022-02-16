@@ -1,4 +1,5 @@
 import 'package:chat_app/add_room_screen.dart';
+import 'package:chat_app/chat_details_screen.dart';
 import 'package:chat_app/room.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -69,21 +70,27 @@ class RoomGridItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(12),
-      decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
-          boxShadow: [
-            BoxShadow(color: Colors.black45, offset: Offset(12, 12))
-          ]),
-      child: Column(
-        children: [
-          selectedCategoryImage(),
-          CustomText(
-            text: room.roomName,
-          ),
-        ],
+    return InkWell(
+      onTap: () {
+        Navigator.pushNamed(context, ChatDetailsScreen.routeName,
+            arguments: room);
+      },
+      child: Container(
+        padding: EdgeInsets.all(12),
+        decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(12),
+            boxShadow: [
+              BoxShadow(color: Colors.black45, offset: Offset(12, 12))
+            ]),
+        child: Column(
+          children: [
+            selectedCategoryImage(),
+            CustomText(
+              text: room.roomName,
+            ),
+          ],
+        ),
       ),
     );
   }
