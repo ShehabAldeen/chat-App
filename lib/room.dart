@@ -6,7 +6,6 @@ class Room {
   String roomName;
   String description;
   String category;
-
   Room(
       {required this.id,
       required this.description,

@@ -1,4 +1,5 @@
 import 'package:chat_app/add_room_screen.dart';
+import 'package:chat_app/chat_details_screen.dart';
 import 'package:chat_app/login_screen.dart';
 import 'package:chat_app/provider/auth_provider.dart';
 import 'package:chat_app/register_screen.dart';
@@ -36,6 +37,7 @@ class MyApp extends StatelessWidget {
         LoginScreen.routeName: (context) => LoginScreen(),
         HomeScreen.routeName: (context) => HomeScreen(),
         AddRoomScreen.routeName: (context) => AddRoomScreen(),
+        ChatDetailsScreen.routeName: (context) => ChatDetailsScreen(),
       },
       initialRoute:
           provider.isLoggedIn() ? HomeScreen.routeName : LoginScreen.routeName,
