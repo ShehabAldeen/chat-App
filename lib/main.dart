@@ -1,7 +1,19 @@
+import 'package:chat_app/add_room_screen.dart';
+import 'package:chat_app/chat_details_screen.dart';
+import 'package:chat_app/login_screen.dart';
+import 'package:chat_app/provider/auth_provider.dart';
+import 'package:chat_app/register_screen.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-void main() {
-  runApp(const MyApp());
+import 'home_screen.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  runApp(ChangeNotifierProvider(
+      create: (BuildContext context) => AuthProvider(), child: const MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -9,12 +21,26 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var provider = Provider.of<AuthProvider>(context);
     return MaterialApp(
-      title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
+        scaffoldBackgroundColor: Colors.transparent,
+        appBarTheme: AppBarTheme(
+          elevation: 0,
+          backgroundColor: Colors.transparent,
+          centerTitle: true,
+        ),
       ),
-      routes: {},
+      routes: {
+        Registerscreen.routeName: (context) => Registerscreen(),
+        LoginScreen.routeName: (context) => LoginScreen(),
+        HomeScreen.routeName: (context) => HomeScreen(),
+        AddRoomScreen.routeName: (context) => AddRoomScreen(),
+        ChatDetailsScreen.routeName: (context) => ChatDetailsScreen(),
+      },
+      initialRoute:
+          provider.isLoggedIn() ? HomeScreen.routeName : LoginScreen.routeName,
     );
   }
 }
