@@ -1,13 +1,62 @@
+import 'dart:io';
+
 import 'package:chat_app/add_room_screen.dart';
 import 'package:chat_app/chat_details_screen.dart';
 import 'package:chat_app/room.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 
 import 'custom_files/custom_text.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   static String routeName = 'homeScreen';
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    initFirebaseCloudMessage();
+  }
+
+  void initFirebaseCloudMessage() {
+    configIOSPlatForm();
+    retriveToken();
+    //app in foreground
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      print('Got a message whilst in the foreground!');
+      print('Message data: ${message.data}');
+
+      if (message.notification != null) {
+        print('Message also contained a notification: ${message.notification}');
+      }
+    });
+  }
+
+  void configIOSPlatForm() async {
+    if (Platform.isIOS) {
+      FirebaseMessaging messaging = FirebaseMessaging.instance;
+      NotificationSettings settings = await messaging.requestPermission(
+        alert: true,
+        announcement: false,
+        badge: true,
+        carPlay: false,
+        criticalAlert: false,
+        provisional: false,
+        sound: true,
+      );
+    }
+  }
+
+  void retriveToken() async {
+    String? token = await FirebaseMessaging.instance.getToken();
+    print('Token $token');
+  }
 
   @override
   Widget build(BuildContext context) {
