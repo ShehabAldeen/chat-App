@@ -1,11 +1,9 @@
-import 'package:chat_app/login_screen.dart';
 import 'package:chat_app/message.dart';
 import 'package:chat_app/room.dart';
 import 'package:chat_app/users.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
 import 'home_screen.dart';
 
 Future<void> addUserToFirestore(UserData user) {
